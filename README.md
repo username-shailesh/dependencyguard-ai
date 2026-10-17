@@ -131,25 +131,47 @@ The repository contains a realistic synthetic supply-chain graph with 5 enterpri
 - Node.js 18+ & npm installed (`node -v`, `npm -v`)
 - *(Optional)* Docker installed for live FalkorDB instance (`docker --version`)
 
-### Step 1: Start FalkorDB (Optional if Docker is installed)
+### Step 1: (Optional) Start FalkorDB
+If Docker is installed:
 ```powershell
 .\scripts\start-falkordb.ps1
+# Or: docker run -p 6379:6379 -d falkordb/falkordb:latest
 ```
-> *Note: If Docker is not installed on your system, DependencyGuard AI automatically runs its built-in graph engine. All 25 test cases and UI workflows work out of the box with zero external dependencies.*
+> *Note: If Docker is not installed on your machine, DependencyGuard AI automatically runs its built-in graph engine. All 25 test cases and UI workflows work 100% out of the box with zero external dependencies.*
 
 ### Step 2: Start the Backend Service
-In a new PowerShell terminal:
+In a new terminal:
 ```powershell
+# From project root:
 .\scripts\start-backend.ps1
+
+# Or run directly with Java:
+java -jar backend/target/backend-1.0.0-SNAPSHOT.jar
 ```
 Backend will start on `http://localhost:8080`.
 
 ### Step 3: Start the Frontend Dashboard
-In a new PowerShell terminal:
+In a second terminal:
 ```powershell
+# From project root:
 .\scripts\start-frontend.ps1
+
+# Or run directly:
+cd frontend
+npm run dev
 ```
-Open your browser at `http://localhost:5173`.
+Open your browser at **`http://localhost:5173`**.
+
+---
+
+### Alternative: Run with Docker Compose (Single Command)
+If you have Docker Desktop installed:
+```bash
+docker compose up --build
+```
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8080`
+- FalkorDB: `localhost:6379`
 
 ---
 
