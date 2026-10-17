@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: dependencyguard-backend
+
+falkordb:
+  host: ${FALKORDB_HOST:localhost}
+  port: ${FALKORDB_PORT:6379}
+  graph-name: ${FALKORDB_GRAPH_NAME:dependencyguard}
+  password: ${FALKORDB_PASSWORD:}
+  timeout-ms: 5000
+  auto-seed: true
+
+ai:
+  provider: ${AI_PROVIDER:deterministic} # deterministic, openai, gemini
+  api-key: ${AI_API_KEY:}
+  model: ${AI_MODEL:gemini-1.5-pro}
+  temperature: 0.2
+
+logging:
+  level:
+    com.dependencyguard: INFO
+    org.springframework.web: INFO

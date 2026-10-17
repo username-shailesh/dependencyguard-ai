@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # FalkorDB: Low-latency graph database built on Redis module architecture
+  falkordb:
+    image: falkordb/falkordb:latest
+    container_name: dependencyguard-falkordb
+    ports:
+      - "6379:6379"
+    volumes:
+      - falkordb-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Spring Boot Backend Service (Java 21, JFalkorDB client)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dependencyguard-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - FALKORDB_HOST=falkordb
+      - FALKORDB_PORT=6379
+      - FALKORDB_GRAPH_NAME=dependencyguard
+      - AI_PROVIDER=deterministic
+      - AI_API_KEY=
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # React + Vite + Tailwind Frontend Dashboard
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dependencyguard-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  falkordb-data:
+    driver: local
