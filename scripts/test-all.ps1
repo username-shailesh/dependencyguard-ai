@@ -10,7 +10,7 @@ Write-Host "==========================================================" -Foregro
 $backendDir = "$PSScriptRoot\..\backend"
 $frontendDir = "$PSScriptRoot\..\frontend"
 
-Write-Host "`n[1/2] Running Backend JUnit 5 & Spring Boot Tests..." -ForegroundColor Yellow
+Write-Host "`n[1/2] Running Backend JUnit 5 and Spring Boot Tests..." -ForegroundColor Yellow
 Set-Location $backendDir
 mvn test
 if ($LASTEXITCODE -ne 0) {
@@ -19,7 +19,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "[✓] All backend tests PASSED!" -ForegroundColor Green
 
-Write-Host "`n[2/2] Running Frontend Vitest & React Testing Library Tests..." -ForegroundColor Yellow
+Write-Host "`n[2/2] Running Frontend Vitest and React Testing Library Tests..." -ForegroundColor Yellow
 Set-Location $frontendDir
 npm test
 if ($LASTEXITCODE -ne 0) {
