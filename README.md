@@ -1,48 +1,49 @@
 # DependencyGuard AI
 
-> **An Explainable AI Agent for Software Supply-Chain Risk Analysis.**
+> **An Explainable AI Agent for Software Supply-Chain Risk Analysis powered by FalkorDB.**
 
 [![Java](https://img.shields.io/badge/Java-21%20LTS-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![FalkorDB](https://img.shields.io/badge/FalkorDB-0.13.1-crimson.svg)](https://www.falkordb.com/)
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4-38bdf8.svg)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-25%20Passed%20%2F%200%20Failed-success.svg)](docs/testing.md)
 
 ---
 
-## 1. Problem Statement
+## 1. Overview & Problem Statement
 
-Modern software architectures rely on complex webs of direct and indirect third-party dependencies. When a critical vulnerability (e.g., Log4Shell, auth bypasses, or Rapid Reset DoS) or license incompatibility (e.g., AGPL/GPL copyleft in commercial SaaS) is reported, security and engineering teams face severe bottlenecks:
-- **Blast Radius Blindness**: Identifying every upstream production service affected through 3-hop or 5-hop transitive dependencies requires slow recursive relational queries.
-- **Unexplained AI Hallucinations**: Standard LLMs often fabricate hypothetical dependencies or CVE risks without verifiable evidence.
-- **Unverified Remediation**: Upgrading a package without knowing downstream breaking changes or validating topological impact often causes production outages.
+Modern microservice architectures depend on hundreds of direct and third-party transitive packages. When a vulnerability (such as a Log4Shell RCE, JWT authentication bypass, or HTTP/2 Rapid Reset DoS) or license incompatibility (GPL/AGPL copyleft in commercial SaaS) is disclosed, engineering and security teams face severe bottlenecks:
+
+- **Transitive Blast Radius Blindness**: Identifying every upstream production service affected through 3-hop or 5-hop transitive dependencies requires slow recursive relational queries.
+- **Unverified AI Hallucinations**: Standard LLMs often fabricate hypothetical dependencies or CVE risks without verifiable evidence.
+- **Risky Production Upgrades**: Blindly upgrading a package without understanding downstream breaking changes or validating topological impact often causes production outages.
+
+**DependencyGuard AI** solves this by converting flat dependency manifests into an active property graph powered by **FalkorDB**. It provides multi-hop blast radius discovery, transparent risk scoring, a 100% grounded AI investigation agent, and a safe remediation simulation engine with instant rollback.
 
 ---
 
-## 2. Solution: DependencyGuard AI
+## 2. Core Capabilities
 
-**DependencyGuard AI** combines **FalkorDB**'s high-performance graph database engine with a **strictly controlled AI investigation agent**. It models applications, packages, CVE vulnerabilities, licenses, and engineering squads in a unified property graph.
-
-### Key Capabilities:
-1. **Multi-Hop Transitive Impact Analysis**: Rapid traversal across direct and indirect dependency chains to determine exact blast radius.
-2. **Explainable AI Agent**: Accepts natural-language security questions, maps them to parameterized OpenCypher queries, and grounds answers in verified graph paths.
-3. **Transparent Blast Radius Risk Score (BRS)**: An index (0–100) combining vulnerability base severity, application business criticality tiers, dependency depth, and remediation availability.
-4. **Remediation Simulation & Instant Rollback**: Preview dependency graph updates, simulate edge rewiring to patched candidate versions, and rollback with one click.
-5. **Open Source License Compliance**: Automated detection of copyleft (GPL-3.0, AGPL-3.0) policy conflicts in commercial services.
-6. **Cross-Session Investigation Memory**: Persists previous investigations and automatically re-validates time-sensitive findings against live graph state.
+- **Multi-Hop Dependency Traversal**: Traces direct and indirect dependency chains up to 6+ hops deep to pinpoint the exact blast radius across microservices.
+- **Explainable AI Agent**: Accepts natural-language security questions, maps them to parameterized OpenCypher queries, and grounds answers in verifiable FalkorDB graph paths.
+- **Transparent Blast Radius Risk Score (BRS)**: An index (0–100) combining vulnerability base severity, application business criticality tiers (`TIER_1` to `TIER_3`), dependency path depth, and patch availability.
+- **Remediation Simulation & Instant Rollback**: Previews dependency graph updates, simulates edge rewiring to patched candidate versions, and rolls back with a single click.
+- **Open Source License Governance**: Automated detection of copyleft (GPL-3.0, AGPL-3.0) policy conflicts under Enterprise Policy `SEC-LIC-04`.
+- **Cross-Session Investigation Memory**: Persists previous inquiries and automatically re-validates time-sensitive findings against live graph state.
+- **Dual-Mode Engine**: Operates with a live FalkorDB instance via Redis protocol, with an automatic high-fidelity in-memory graph traversal fallback engine ensuring seamless local execution.
 
 ---
 
 ## 3. Technology Stack
 
 - **Graph Database**: [FalkorDB](https://www.falkordb.com/) (Low-latency graph engine on Redis module architecture with GraphBLAS matrix multiplication).
-- **Backend**: Java 21 (LTS), Spring Boot 3.3.4, official `com.falkordb:jfalkordb` client.
+- **Backend**: Java 21 (LTS), Spring Boot 3.3.4, official `com.falkordb:jfalkordb` client (`v0.13.1`).
 - **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, `@xyflow/react` (React Flow) interactive canvas.
 - **Testing**: JUnit 5, Spring Boot Test (`MockMvc`), AssertJ, Vitest, React Testing Library.
-- **Local Infrastructure**: Docker Compose with multi-stage container builds.
-- **Dual-Mode Engine**: Operates with a live FalkorDB instance when available, with an automatic high-fidelity in-memory graph traversal fallback engine ensuring 100% demo availability without external dependencies.
+- **Infrastructure**: Docker Compose, Multi-stage Dockerfiles, Nginx Alpine reverse proxy.
 
 ---
 
@@ -94,9 +95,9 @@ Modern software architectures rely on complex webs of direct and indirect third-
 
 ---
 
-## 5. Seeded Topological Graph Model
+## 5. Seeded Graph Model & Topological Attack Surface
 
-The repository contains a realistic synthetic supply-chain graph with 5 enterprise applications, shared packages, 3-hop transitive chains, and known CVEs:
+The platform includes a realistic synthetic enterprise supply-chain graph with 5 services, shared packages, 3-hop transitive chains, and known CVEs:
 
 ```
 [Payment Service (Tier 1)] ─────┬──▶ (direct) auth-core:1.2.0 ──▶ [CVE-2024-45321 (CRITICAL)]
@@ -123,24 +124,19 @@ The repository contains a realistic synthetic supply-chain graph with 5 enterpri
 
 ---
 
-## 6. Quick Start Guide (Windows PowerShell)
+## 6. Quick Start Guide
 
-### Prerequisites:
-- Java 21 LTS installed (`java -version`)
-- Maven 3.9+ installed (`mvn -v`)
-- Node.js 18+ & npm installed (`node -v`, `npm -v`)
-- *(Optional)* Docker installed for live FalkorDB instance (`docker --version`)
+### Prerequisites
+- **Java 21 LTS** installed (`java -version`)
+- **Node.js 18+ & npm** installed (`node -v`, `npm -v`)
+- *(Optional)* Docker Desktop installed if running a live FalkorDB instance
 
-### Step 1: (Optional) Start FalkorDB
-If Docker is installed:
-```powershell
-.\scripts\start-falkordb.ps1
-# Or: docker run -p 6379:6379 -d falkordb/falkordb:latest
-```
-> *Note: If Docker is not installed on your machine, DependencyGuard AI automatically runs its built-in graph engine. All 25 test cases and UI workflows work 100% out of the box with zero external dependencies.*
+---
 
-### Step 2: Start the Backend Service
-In a new terminal:
+### Option A: Local Run (Fastest)
+
+#### 1. Start the Backend Service
+In your first terminal:
 ```powershell
 # From project root:
 .\scripts\start-backend.ps1
@@ -150,8 +146,8 @@ java -jar backend/target/backend-1.0.0-SNAPSHOT.jar
 ```
 Backend will start on `http://localhost:8080`.
 
-### Step 3: Start the Frontend Dashboard
-In a second terminal:
+#### 2. Start the Frontend Dashboard
+In your second terminal:
 ```powershell
 # From project root:
 .\scripts\start-frontend.ps1
@@ -160,38 +156,26 @@ In a second terminal:
 cd frontend
 npm run dev
 ```
-Open your browser at **`http://localhost:5173`**.
+Open **`http://localhost:5173`** in your browser.
 
 ---
 
-### Alternative: Run with Docker Compose (Single Command)
-If you have Docker Desktop installed:
+### Option B: Docker Compose (Single Command)
+
+If Docker Desktop is running:
 ```bash
 docker compose up --build
 ```
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:8080`
-- FalkorDB: `localhost:6379`
+- **Frontend Dashboard:** `http://localhost:5173`
+- **Backend API:** `http://localhost:8080`
+- **FalkorDB Engine:** `localhost:6379`
 
 ---
 
-## 7. Automated Test Results
+## 7. Sample AI Agent Queries
 
-Run the entire verification suite with a single command:
-```powershell
-.\scripts\test-all.ps1
-```
+You can test these natural language queries directly in the **AI Investigation Agent** tab:
 
-### Verified Test Summary:
-- **Backend (JUnit 5 + Spring Boot Test)**: **21 / 21 tests passed** (0 failures, 0 errors).
-- **Frontend (Vitest + React Testing Library)**: **4 / 4 tests passed** (0 failures).
-- See detailed report in [`docs/testing.md`](docs/testing.md).
-
----
-
-## 8. Sample AI Agent Questions to Test
-
-You can test these queries directly in the AI Investigation tab:
 1. *"Which applications are affected if auth-core is vulnerable?"*
 2. *"Show me the highest-priority security risks."*
 3. *"Which vulnerable package affects the largest number of applications?"*
@@ -199,42 +183,85 @@ You can test these queries directly in the AI Investigation tab:
 5. *"What should I fix first, and why?"*
 6. *"Audit license policy violations."*
 
----
-
-## 9. Demo Video Script (2–3 Minutes)
-
-- **0:00 – 0:30 (The Problem)**: "Modern microservices depend on hundreds of packages. A vulnerability 3 hops deep in a transitive dependency like `crypto-vault` is invisible in standard flat dependency lists."
-- **0:30 – 1:00 (Interactive Graph Canvas)**: Show the React Flow graph with `Payment Service`, `Auth Gateway`, and `Customer Portal`. Filter by node type. Highlight multi-hop dependencies.
-- **1:00 – 1:30 (Vulnerability Blast Radius)**: Inspect `CVE-2024-45321` in `auth-core`. Show how it directly impacts 2 Tier-1 applications and transitively exposes `crypto-vault`.
-- **1:30 – 2:00 (Explainable AI Agent)**: Ask the agent: *"Which applications are affected if auth-core is vulnerable?"*. Demonstrate the 100% grounded explanation, the multi-hop evidence breadcrumbs, and the executed OpenCypher query.
-- **2:00 – 2:30 (Remediation & Instant Rollback)**: Click "Preview Remediation". Inspect the proposed upgrade to `v1.2.4`. Click "Apply Remediation" to rewire the graph edges in real time. Demonstrate instant neutralization of the vulnerability, followed by one-click rollback.
-- **2:30 – 3:00 (Why FalkorDB)**: Summarize how FalkorDB's GraphBLAS matrix engine enables instant sub-millisecond multi-hop path reachability and atomic graph edge mutation.
+Each response displays the exact OpenCypher query executed, verified evidence breadcrumbs, and a recommended remediation action.
 
 ---
 
-## 10. Hackathon Submission Description
+## 8. REST API Reference
 
-### Project Title
-DependencyGuard AI
-
-### Elevator Pitch / Tagline
-An Explainable AI Agent for Software Supply-Chain Risk Analysis powered by FalkorDB.
-
-### Problem Statement
-Software supply chains are vulnerable to hidden transitive dependencies. Developers and SOC teams struggle to trace indirect vulnerability exposure, understand the true blast radius across production services, and safely test remediation without breaking production dependencies.
-
-### Solution & FalkorDB Impact
-DependencyGuard AI transforms flat dependency manifests into an active property graph in FalkorDB. Using OpenCypher path traversals and GraphBLAS matrix operations, it instantly computes multi-hop blast radius, calculates a transparent Blast Radius Risk Score (BRS), and powers an AI agent that generates explainable, grounded security findings with complete evidence chains. A built-in remediation simulator re-wires graph relationships to patched versions with instant rollback capability.
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/graph/overview` | High-level metrics (apps, packages, CVEs, BRS index) |
+| `GET` | `/api/graph/data` | Complete graph topology (nodes and edges) for canvas rendering |
+| `GET` | `/api/graph/status` | FalkorDB connection status and client library details |
+| `POST` | `/api/graph/seed` | Reset and re-seed the graph with sample dataset |
+| `GET` | `/api/vulnerabilities` | Prioritized list of vulnerabilities ranked by Blast Radius Score |
+| `GET` | `/api/vulnerabilities/{cveId}/blast-radius` | Blast radius breakdown and multi-hop paths for a specific CVE |
+| `POST` | `/api/agent/investigate` | Submit natural-language question to the AI Agent |
+| `GET` | `/api/remediation/preview/{cveId}` | Preview graph mutation impact and breaking changes |
+| `POST` | `/api/remediation/apply/{cveId}` | Atomically rewire graph edges to patched package version |
+| `POST` | `/api/remediation/rollback/{cveId}` | Restore original graph edges from snapshot |
+| `GET` | `/api/licenses/violations` | Copyleft and high-risk license compliance audit |
+| `GET` | `/api/agent/history` | Cross-session investigation history with live graph re-validation |
 
 ---
 
-## 11. Final Hackathon Submission Checklist
+## 9. Automated Testing & Verification
 
-- [x] Repository contains clean, structured source code (`backend/`, `frontend/`, `graph/`, `docs/`, `scripts/`).
-- [x] Tested and verified on Windows PowerShell.
-- [x] `docker-compose.yml` and `.env.example` provided.
-- [x] Real Cypher queries implemented for direct, transitive, shared, and blast radius investigations.
-- [x] AI agent grounded in database results with zero hallucinations.
-- [x] Deterministic fallback enabled so app is fully demonstrable without paid API keys.
-- [x] All 25 test cases run and verified (100% pass rate).
-- [x] Demo video script and hackathon pitch included.
+The project includes unit and integration tests across both backend and frontend layers:
+
+```powershell
+# Run the complete test suite:
+powershell.exe -ExecutionPolicy Bypass -File ".\scripts\test-all.ps1"
+```
+
+### Verified Test Summary
+- **Backend (JUnit 5 + Spring Boot Test)**: **21 / 21 tests passed** (0 failures, 0 errors).
+- **Frontend (Vitest + React Testing Library)**: **4 / 4 tests passed** (0 failures).
+- **Total**: **25 / 25 automated tests passing (100%)**.
+
+Refer to [`docs/testing.md`](docs/testing.md) for the detailed test execution log.
+
+---
+
+## 10. Project Directory Structure
+
+```
+├── backend/                       # Spring Boot 3.3.4 (Java 21) backend service
+│   ├── src/main/java/             # Controllers, Services, Repositories, Models
+│   ├── src/main/resources/        # application.yml, seed.cypher
+│   └── src/test/java/             # 21 JUnit 5 & MockMvc test cases
+├── frontend/                      # React 18 + TypeScript + Vite frontend
+│   ├── src/components/            # Graph canvas, panels, modals, chat
+│   ├── src/services/              # Typed REST client
+│   └── src/test/                  # 4 Vitest / React Testing Library tests
+├── graph/                         # Graph definitions
+│   ├── schema.cypher              # FalkorDB index definitions
+│   ├── seed.cypher                # Synthetic supply-chain graph dataset
+│   └── queries/                   # Reusable OpenCypher query library
+├── docs/                          # Technical documentation
+│   ├── architecture.md            # Architecture and FalkorDB role
+│   ├── graph-model.md             # Entity relationships and schemas
+│   ├── agent-workflow.md          # 7-step agent loop & BRS formula
+│   ├── testing.md                 # Test execution report
+│   └── hackathon-submission.md    # Hackathon video script & pitch details
+├── scripts/                       # PowerShell automation scripts
+├── docker-compose.yml             # Container orchestration
+└── LICENSE                        # Apache 2.0 License
+```
+
+---
+
+## 11. Documentation Links
+
+- [System Architecture](docs/architecture.md)
+- [Graph Data Model](docs/graph-model.md)
+- [Agent Workflow & Risk Scoring](docs/agent-workflow.md)
+- [Test Report](docs/testing.md)
+- [Hackathon Submission Details](docs/hackathon-submission.md)
+
+---
+
+## 12. License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
